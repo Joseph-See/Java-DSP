@@ -1,5 +1,6 @@
 /*
-* Program for calculating the discrete Fourier transform of an input signal array
+* Program for calculating the discrete Fourier transform and the inverse discrete Fourier transform
+* of an input signal array
  */
 import java.io.*;
 public class Main {
@@ -48,12 +49,39 @@ public class Main {
         }
     }
 
+    /*
+    * Method to get the magnitude of the DFT
+     */
     public static void get_dft_output_mag(double[] sig_src_rex_arr, double[] sig_src_imx_arr,
                                           double[] sig_dest_mag_arr, int sig_length) {
         int x;
         // Signal length divided by two to avoid DFT mirroring
         for (x = 0; x < sig_length/2; x++) {
             sig_dest_mag_arr[x] = Math.sqrt(Math.pow(sig_src_rex_arr[x], 2) + Math.pow(sig_src_imx_arr[x], 2));
+        }
+    }
+
+    public static void sig_calc_idft(double[] idft_out_arr, double[] sig_src_rex_arr,
+                                     double[] sig_src_imx_arr, int idft_length) {
+
+        int i, k;
+
+        for (k = 0; k < idft_length; k++) {
+            sig_src_rex_arr[k] = sig_src_rex_arr[k] / (idft_length / 2);
+            sig_src_imx_arr[k] = sig_src_imx_arr[k] / (idft_length / 2);
+        }
+
+        // Initialize output array to zero
+        for (i = 0; i < idft_length; i++) {
+            idft_out_arr[i] = 0;
+        }
+
+        // Perform the IDFT
+        for (k = 0; k < idft_length/2; k++) {
+            for (i = 0; i < idft_length; i++) {
+                idft_out_arr[i] = idft_out_arr[i] + sig_src_rex_arr[k] * Math.cos(2*Math.PI*k*i/idft_length);
+                idft_out_arr[i] = idft_out_arr[i] + sig_src_imx_arr[k] * Math.sin(2*Math.PI*k*i/idft_length);
+            }
         }
     }
 
